@@ -2,7 +2,7 @@ import React from 'react';
 import Area from '@components/common/Area';
 import './Layout.scss';
 import './tailwind.scss';
-
+import Footer from './Footer';
 export default function AdminLayout() {
   return (
     <>

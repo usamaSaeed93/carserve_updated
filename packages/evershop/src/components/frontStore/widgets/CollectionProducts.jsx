@@ -4,7 +4,8 @@ import ProductList from '@components/frontStore/catalog/product/list/List';
 import FeaturedProducts from './FeaturedProducts';
 
 export default function CollectionProducts({ collections }) {
-  console.log(collections);
+
+  console.log("collextions", collections);
   if (!collections || collections.length === 0) {
     return <p>No collections available</p>;
   }

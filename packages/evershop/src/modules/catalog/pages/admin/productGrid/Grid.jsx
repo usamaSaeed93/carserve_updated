@@ -167,9 +167,9 @@ export default function ProductGrid({
 
   const limit = currentFilters.find((filter) => filter.key === 'limit')
     ? parseInt(
-        currentFilters.find((filter) => filter.key === 'limit').value,
-        10
-      )
+      currentFilters.find((filter) => filter.key === 'limit').value,
+      10
+    )
     : 20;
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -241,7 +241,7 @@ export default function ProductGrid({
                           selectedOption={
                             currentFilters.find((f) => f.key === 'status')
                               ? currentFilters.find((f) => f.key === 'status')
-                                  .value === '1'
+                                .value === '1'
                                 ? 'Enabled'
                                 : 'Disabled'
                               : undefined
@@ -279,7 +279,7 @@ export default function ProductGrid({
                           selectedOption={
                             currentFilters.find((f) => f.key === 'type')
                               ? currentFilters.find((f) => f.key === 'type')
-                                  .value
+                                .value
                               : undefined
                           }
                           title="Product type"

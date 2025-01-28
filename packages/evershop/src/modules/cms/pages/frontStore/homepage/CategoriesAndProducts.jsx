@@ -1,167 +1,117 @@
-// // import React, { useState } from 'react';
-// // const CategoriesAndProducts = ({ showProductsList, setShowProductsList }) => {
-// //     const categories = [
-// //         'LED & LIGHTENING',
-// //         'EXTERIOR',
-// //         'INTERIOR',
-// //         'CAR CARE',
-// //         'MODIFICATIONS',
-// //         'GADGETS',
-// //         'PAINT PROTECTION FILM',
-// //         'MORE',
-// //         'SALE'
-// //     ];
+import React, { useState, useEffect } from 'react';
+import { useQuery } from 'urql';
 
-// //     const products = [
-// //         [
-// //             ['first', 'second', 'third'],
-// //             ['fourth', 'fifth', 'sixth'],
-// //             ['seventh', 'eight', 'ninth']
-// //         ],
-// //         [
-// //             ['another first', 'anotherrr second', 'anotherrr third'],
-// //             ['another fourth', 'anotherrr fifth', 'anotherrr sixth'],
-// //             ['another seventh', 'anotherrr eight', 'anotherrr ninth']
-// //         ]
-// //     ];
+const GET_CATEGORIES = `
+  query GetCategories {
+    categories {
+      items {
+        categoryId
+        name
+        description
+        image {
+          url
+          alt
+        }
+        url
+        children {
+          categoryId
+          name
+          description
+          image {
+            url
+            alt
+          }
+          url
+          children {
+            categoryId
+            name
+            description
+            image {
+              url
+              alt
+            }
+            url
+          }
+        }
+      }
+    }
+  }
+`;
 
-// //     // const [showProductsList, setShowProductsList] = useState(products[0]);
+const CategoriesAndProducts = () => {
+    const [result] = useQuery({ query: GET_CATEGORIES });
+    const { data, fetching, error } = result;
 
-// //     const handleProductsList = (event, index) => {
-// //         if (products[index]) {
-// //             setShowProductsList(products[index]);
-// //         } else {
-// //             setShowProductsList(null);
-// //         }
-// //     };
+    const [categories, setCategories] = useState([]);
+    const [showProductsList, setShowProductsList] = useState(null);
 
-// //     const handleMouseLeave = () => {
-// //         setShowProductsList(null);
-// //     };
+    // Update categories when new data is available
+    useEffect(() => {
+        if (data && data.categories && data.categories.items) {
+            console.log("data", data);
+            setCategories(data.categories.items);
+        }
+    }, [data]);
 
-// //     return (
-// //         <div className="relative">
-// //             <div className="flex text-[14px] flex-wrap justify-center  text-white gap-x-6 gap-y-5 px-3 py-4 bg-[#222222]">
-// //                 {categories.map((category, index) => {
-// //                     return (
-// //                         <div
-// //                             onMouseEnter={(event) => {
-// //                                 handleProductsList(event, index);
-// //                             }}
-// //                             // onMouseLeave={handleMouseLeave}
-// //                             className="cursor-pointer hover:text-[#ff943d] transition-all duration-200"
-// //                         >
-// //                             {category}
-// //                         </div>
-// //                     );
-// //                 })}
-// //             </div>
+    const handleProductsList = (event, category) => {
+        if (category?.children) {
+            setShowProductsList(category.children);
+        } else {
+            setShowProductsList(null);
+        }
+    };
+    const handleMouseLeave = () => {
+        setShowProductsList(null);
+    };
+    if (fetching) return <p className="text-center text-gray-500">Loading categories...</p>;
+    if (error) return <p className="text-center text-red-500">Failed to load categories: {error.message}</p>;
 
-// //             {showProductsList ? (
-// //                 <div
-// //                     onMouseEnter={(event) => {
-// //                         event.preventDefault();
-// //                     }}
-// //                     className="w-full md:w-[80%] absolute px-6 border-l border-r border-gray-200 py-10 text-2xl  bg-white shadow-md left-1/2 -translate-x-1/2 z-20"
-// //                 >
-// //                     <div className="w-full   flex flex-wrap gap-y-3 justify-between">
-// //                         {showProductsList.map((productsList) => {
-// //                             return (
-// //                                 <div className="space-y-3  flex-grow">
-// //                                     {productsList.map((product) => {
-// //                                         return (
-// //                                             <div className="cursor-pointer hover:text-[#ff943d] transition-all duration-300">
-// //                                                 {product}
-// //                                             </div>
-// //                                         );
-// //                                     })}
-// //                                 </div>
-// //                             );
-// //                         })}
-// //                     </div>
-// //                 </div>
-// //             ) : null}
-// //         </div>
-// //     );
-// // };
-// // export default CategoriesAndProducts;
+    return (
+        <div className="relative" onMouseLeave={handleMouseLeave}>
+            <div className="flex text-[14px] flex-wrap justify-center text-white gap-x-6 gap-y-5 px-3 py-4 bg-[#222222]">
+                {categories?.map((category) => (
+                    <div
+                        key={category.categoryId}
+                        onMouseEnter={(event) => handleProductsList(event, category)}
+                        className="cursor-pointer hover:text-[#ff943d] transition-all duration-200"
+                    >
+                        {category.name}
+                    </div>
+                ))}
+            </div>
 
-// import React, { useState } from 'react';
-// import PropTypes from 'prop-types';
+            {showProductsList ? (
+                <div
+                    onMouseEnter={(event) => event.preventDefault()}
+                    className="w-full md:w-[80%] absolute px-6 border-l border-r border-gray-200 py-10 text-2xl bg-white shadow-md left-1/2 -translate-x-1/2 z-20"
+                >
+                    <div className="w-full flex flex-wrap gap-y-3 justify-between">
+                        {showProductsList.map((subCategory) => (
+                            <div key={subCategory.categoryId} className="space-y-3 flex-grow">
+                                <a href={subCategory.url} className="cursor-pointer hover:text-[#ff943d] transition-all duration-300">
+                                    {subCategory.name}
+                                </a>
+                                {subCategory.children && subCategory.children.length > 0 && (
+                                    <ul className="pl-4">
+                                        {subCategory.children.map((child) => (
+                                            <li key={child.categoryId}>
+                                                <a
+                                                    href={child.url}
+                                                    className="hover:text-[#ff943d] transition-all duration-300"
+                                                >
+                                                    {child.name}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ) : null}
+        </div>
+    );
+};
 
-// const CategoriesAndProducts = ({ categories, showProductsList, setShowProductsList }) => {
-//     const handleProductsList = (event, index) => {
-//         if (categories[index]?.children) {
-//             setShowProductsList(categories[index].children);
-//         } else {
-//             setShowProductsList(null);
-//         }
-//     };
-
-//     return (
-//         <div className="relative">
-//             <div className="flex text-[14px] flex-wrap justify-center text-white gap-x-6 gap-y-5 px-3 py-4 bg-[#222222]">
-//                 {categories.map((category, index) => (
-//                     <div
-//                         key={category.id}
-//                         onMouseEnter={(event) => handleProductsList(event, index)}
-//                         className="cursor-pointer hover:text-[#ff943d] transition-all duration-200"
-//                     >
-//                         {category.name}
-//                     </div>
-//                 ))}
-//             </div>
-
-//             {showProductsList ? (
-//                 <div
-//                     onMouseEnter={(event) => event.preventDefault()}
-//                     className="w-full md:w-[80%] absolute px-6 border-l border-r border-gray-200 py-10 text-2xl bg-white shadow-md left-1/2 -translate-x-1/2 z-20"
-//                 >
-//                     <div className="w-full flex flex-wrap gap-y-3 justify-between">
-//                         {showProductsList.map((subCategory) => (
-//                             <div key={subCategory.id} className="space-y-3 flex-grow">
-//                                 <div className="cursor-pointer hover:text-[#ff943d] transition-all duration-300">
-//                                     {subCategory.name}
-//                                 </div>
-//                                 {subCategory.children && subCategory.children.length > 0 && (
-//                                     <ul className="pl-4">
-//                                         {subCategory.children.map((child) => (
-//                                             <li key={child.id} className="hover:text-[#ff943d] transition-all duration-300">
-//                                                 {child.name}
-//                                             </li>
-//                                         ))}
-//                                     </ul>
-//                                 )}
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>
-//             ) : null}
-//         </div>
-//     );
-// };
-
-// CategoriesAndProducts.propTypes = {
-//     categories: PropTypes.arrayOf(
-//         PropTypes.shape({
-//             id: PropTypes.string.isRequired,
-//             name: PropTypes.string.isRequired,
-//             children: PropTypes.arrayOf(
-//                 PropTypes.shape({
-//                     id: PropTypes.string.isRequired,
-//                     name: PropTypes.string.isRequired,
-//                     children: PropTypes.arrayOf(
-//                         PropTypes.shape({
-//                             id: PropTypes.string.isRequired,
-//                             name: PropTypes.string.isRequired,
-//                         })
-//                     ),
-//                 })
-//             ),
-//         })
-//     ).isRequired,
-//     showProductsList: PropTypes.array,
-//     setShowProductsList: PropTypes.func.isRequired,
-// };
-
-// export default CategoriesAndProducts;
+export default CategoriesAndProducts;

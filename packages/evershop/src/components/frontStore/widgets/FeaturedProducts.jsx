@@ -50,7 +50,6 @@ export const FeaturedProducts = ({ collections }) => {
                     }}
                 >
                     <SplideTrack>
-                        {/* Render each product exactly once */}
                         {collections.items?.[activeTab]?.products?.items.map((product) => (
                             <SplideSlide key={product.productId}>
                                 <div className="bg-white w-[200px] relative overflow-hidden border border-gray-300 rounded-md">
@@ -131,35 +130,35 @@ export const FeaturedProducts = ({ collections }) => {
     );
 };
 
-FeaturedProducts.propTypes = {
-    collections: PropTypes.shape({
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                collectionId: PropTypes.number.isRequired,
-                name: PropTypes.string.isRequired,
-                products: PropTypes.shape({
-                    items: PropTypes.arrayOf(
-                        PropTypes.shape({
-                            productId: PropTypes.number.isRequired,
-                            name: PropTypes.string.isRequired,
-                            image: PropTypes.shape({
-                                url: PropTypes.string.isRequired,
-                                alt: PropTypes.string.isRequired,
-                            }).isRequired,
-                            price: PropTypes.shape({
-                                regular: PropTypes.shape({
-                                    text: PropTypes.string.isRequired,
-                                }).isRequired,
-                                special: PropTypes.shape({
-                                    text: PropTypes.string.isRequired,
-                                }).isRequired,
-                            }).isRequired,
-                        })
-                    ).isRequired,
-                }).isRequired,
-            })
-        ),
-    }).isRequired,
-};
+// FeaturedProducts.propTypes = {
+//     collections: PropTypes.shape({
+//         items: PropTypes.arrayOf(
+//             PropTypes.shape({
+//                 collectionId: PropTypes.number.isRequired,
+//                 name: PropTypes.string.isRequired,
+//                 products: PropTypes.shape({
+//                     items: PropTypes.arrayOf(
+//                         PropTypes.shape({
+//                             productId: PropTypes.number.isRequired,
+//                             name: PropTypes.string.isRequired,
+//                             image: PropTypes.shape({
+//                                 url: PropTypes.string.isRequired,
+//                                 alt: PropTypes.string.isRequired,
+//                             }).isRequired,
+//                             price: PropTypes.shape({
+//                                 regular: PropTypes.shape({
+//                                     text: PropTypes.string.isRequired,
+//                                 }).isRequired,
+//                                 special: PropTypes.shape({
+//                                     text: PropTypes.string.isRequired,
+//                                 }).isRequired,
+//                             }).isRequired,
+//                         })
+//                     ).isRequired,
+//                 }).isRequired,
+//             })
+//         ),
+//     }).isRequired,
+// };
 
 export default FeaturedProducts;

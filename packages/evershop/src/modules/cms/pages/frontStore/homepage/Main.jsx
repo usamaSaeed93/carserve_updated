@@ -4,7 +4,7 @@ import { Splide, SplideTrack, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Collection from '@components/frontStore/widgets/Collection';
 import CategoriesMenu from './CategoriesAll';
-
+import CategoriesAndProducts from './CategoriesAndProducts';
 const CartIcon = () => {
   return (
     <svg
@@ -84,48 +84,115 @@ const parts = [
   }
 ];
 
-const CarSelection = ({ showProductsList, setShowProductsList }) => {
-  const [showSearchResults, setShowSearchResults] = useState(false);
+const GET_PRODUCTS = `
+  query Query($filters: [FilterInput]) {
+    products(filters: $filters) {
+      items {
+        productId
+        uuid
+        name
+        image {
+          thumb
+        }
+        sku
+        status
+        price {
+          regular {
+            value
+            text
+          }
+        }
+      }
+    }
+  }
+`;
+import { useQuery } from "urql";
+import debounce from "lodash.debounce";
+
+const CarSelection = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(true);
+
+  const [result] = useQuery({
+    query: GET_PRODUCTS,
+    variables: { filters },
+    pause: !filters.length,
+  });
+
+  const { data, fetching, error } = result;
+
+  const handleSearch = debounce((query) => {
+    if (query) {
+      setFilters([{ key: "name", operation: "like", value: query }]);
+    } else {
+      setFilters([]);
+    }
+  }, 300);
+
+  useEffect(() => {
+    handleSearch(searchQuery);
+  }, [searchQuery]);
+
+
   return (
     <div
       onMouseEnter={() => {
-        if (showProductsList) {
-          setShowProductsList(false);
+        if (searchQuery) {
+          setShowSearchResults(true);
         }
       }}
       className=" bg-gradient-to-b from-[#075691] to-[#26a1bd] px-8 pb-8 pt-12   shadow-lg"
     >
-      <div className="mb-12 flex flex-col sm:flex-row gap-y-28 justify-between items-center relative">
-        {showSearchResults && (
-          <div className="absolute left-1/2 -translate-x-1/2 z-50 top-[150%]  w-[570px] pt-4 pb-7 space-y-7 bg-white shadow-2xl px-7">
-            <div className="space-y-3">
-              {[1, 2, 3, 4, 5].map(() => {
-                return (
-                  <div className="cursor-pointer hover:scale-105 duration-200 flex gap-x-8 items-center">
-                    <div className="h-[80px] min-w-[80px] bg-cover bg-center bg-no-repeat bg-[url(https://sehgalmotors.pk/cdn/shop/files/1700457496021003.jpg?v=1737534382&width=100)]"></div>
-                    <div className="text-sm space-y-2">
-                      <p className=" text-xl font-medium ">
-                        Chevrolet Black And Red Door Guard Protector - Edge
-                        Protection Anti-Scratch Buffer Strip
-                      </p>
-                      <p className="text-xl space-x-3">
-                        <span className="line-through">RS.600</span>
-                        <span>RS.120</span>
-                      </p>
+      <div className="mb-12 flex flex-col sm:flex-row gap-y-28 justify-between items-center relative"
+        // onMouseLeave={() => {
+        //   setShowSearchResults(false);
+        // }}
+      >
+        {showSearchResults && searchQuery && (
+          <div className="absolute left-1/2 -translate-x-1/2 z-50 top-[80%] rounded-lg w-[570px] pt-4 pb-7 space-y-7 bg-white shadow-2xl px-7">
+            {fetching ? (
+              <p className="text-center text-gray-500">Loading...</p>
+            ) : error ? (
+              <p className="text-center text-red-500">Error: {error.message}</p>
+            ) : (
+              <>
+                {console.log(data)}
+                {data?.products?.items.length > 0 ? (
+                  data.products.items.map((product) => (
+                    <div
+                      key={product.productId}
+                      className="cursor-pointer hover:scale-105 duration-200 flex gap-x-8 items-center"
+                    >
+                      <div
+                        className="h-[80px] min-w-[80px] bg-cover bg-center bg-no-repeat"
+                        style={{ backgroundImage: `url(${product.image?.thumb})` }}
+                      ></div>
+                      <div className="text-sm space-y-2">
+                        <p className="text-xl font-medium">{product.name}</p>
+                        <p className="text-xl space-x-3">
+                          {product.discountedPrice && (
+                            <span className="line-through">RS.{product.price}</span>
+                          )}
+                          <span>RS.{product?.price?.regular?.value}</span>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500">No results found</p>
+                )}
+              </>
+            )}
             <div className="cursor-pointer text-2xl font-medium hover:text-[#ff943d] transition-all duration-300">
               View All
             </div>
           </div>
         )}
 
-        <div className="w-[150px] h-[30px] ">
+        <div className="w-56 h-auto ">
           <img
-            src="https://enovathemes.com/mobex/wp-content/uploads/logo-landing.svg"
+            src="https://dfwcz.s3.us-east-2.amazonaws.com/static/carserve-logo-removebg-preview.png"
             className="w-full h-full max-w-full object-contain"
             alt=""
           />
@@ -155,15 +222,19 @@ const CarSelection = ({ showProductsList, setShowProductsList }) => {
             </svg>
           </div>
           <input
-            onClick={() => {
-              setShowSearchResults(true);
-            }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             type="text"
             className="w-full bg-transparent outline-none border-none py-3.5   text-xl "
             placeholder="Search"
           />
+          {/* <button
+            onClick={handleSearch}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Search
+          </button> */}
         </div>
-
         <div className="-mt-2 flex items-center gap-x-4">
           <div className="size-8  cursor-pointer">
             <svg
@@ -288,7 +359,7 @@ const CarSelection = ({ showProductsList, setShowProductsList }) => {
 };
 
 
-const Footer = () => {
+export const Footer = () => {
   return (
     <footer className="bg-black">
       <div className="bg-black container mx-auto space-y-16 px-8 lg:px-16 xl:px-24 text-white pb-10 pt-16">
@@ -869,24 +940,22 @@ export default function MainBanner() {
   return (
     <div className="text-black space-y-16 ">
       <div>
-        {/* <CategoriesAndProducts
-          showProductsList={showProductsList}
-          setShowProductsList={setShowProductsList}
-        /> */}
+        <CategoriesAndProducts
+        />
         <CarSelection
           showProductsList={showProductsList}
           setShowProductsList={setShowProductsList}
         />
         <Collection />
       </div>
-      {/* <Showcase />
+      <Showcase />
       <BigSaleDeal />
       <ByCategories />
+
       <DealZone />
       <FeaturedProducts />
       <Banners />
-      <Footer /> */}
-      <CategoriesMenu />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -1,11 +1,10 @@
 import React from 'react';
 import CollectionProducts from './CollectionProducts';
+import FirstCollection from './FirstCollection';
 
 function Collection() {
     return (
-        <div>
-            <CollectionProducts />
-        </div>
+        <FirstCollection />
     );
 }
 
