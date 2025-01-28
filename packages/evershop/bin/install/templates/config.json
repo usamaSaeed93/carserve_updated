@@ -1,6 +1,6 @@
 {
   "shop" : {
-    "currency": "USD",
+    "currency": "PKR",
     "language": "en",
     "weightUnit": "kg",
     "timezone": "UTC"

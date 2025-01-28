@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Editor from '@components/common/Editor';
 
-export default function Page({ page }) {
+function Page({ page }) {
   return (
     <div className="page-width">
       <div className="prose prose-base max-w-none">
