@@ -95,6 +95,7 @@ const GET_PRODUCTS = `
           thumb
         }
         sku
+        url
         status
         price {
           regular {
@@ -145,9 +146,9 @@ const CarSelection = () => {
       className=" bg-gradient-to-b from-[#075691] to-[#26a1bd] px-8 pb-8 pt-12   shadow-lg"
     >
       <div className="mb-12 flex flex-col sm:flex-row gap-y-28 justify-between items-center relative"
-        // onMouseLeave={() => {
-        //   setShowSearchResults(false);
-        // }}
+      // onMouseLeave={() => {
+      //   setShowSearchResults(false);
+      // }}
       >
         {showSearchResults && searchQuery && (
           <div className="absolute left-1/2 -translate-x-1/2 z-50 top-[80%] rounded-lg w-[570px] pt-4 pb-7 space-y-7 bg-white shadow-2xl px-7">
@@ -160,24 +161,27 @@ const CarSelection = () => {
                 {console.log(data)}
                 {data?.products?.items.length > 0 ? (
                   data.products.items.map((product) => (
-                    <div
-                      key={product.productId}
-                      className="cursor-pointer hover:scale-105 duration-200 flex gap-x-8 items-center"
-                    >
+                    <a href={product.url}>
                       <div
-                        className="h-[80px] min-w-[80px] bg-cover bg-center bg-no-repeat"
-                        style={{ backgroundImage: `url(${product.image?.thumb})` }}
-                      ></div>
-                      <div className="text-sm space-y-2">
-                        <p className="text-xl font-medium">{product.name}</p>
-                        <p className="text-xl space-x-3">
-                          {product.discountedPrice && (
-                            <span className="line-through">RS.{product.price}</span>
-                          )}
-                          <span>RS.{product?.price?.regular?.value}</span>
-                        </p>
+                        key={product.productId}
+                        className="cursor-pointer hover:scale-105 duration-200 flex gap-x-8 items-center"
+                      >
+                        <div
+                          className="h-[80px] min-w-[80px] bg-cover bg-center bg-no-repeat"
+                          style={{ backgroundImage: `url(${product.image?.thumb.replace('/assets', '')})` }}
+                        ></div>
+
+                        <div className="text-sm space-y-2">
+                          <p className="text-xl font-medium">{product.name}</p>
+                          <p className="text-xl space-x-3">
+                            {product.discountedPrice && (
+                              <span className="line-through">RS.{product.price}</span>
+                            )}
+                            <span>RS.{product?.price?.regular?.value}</span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   ))
                 ) : (
                   <p className="text-center text-gray-500">No results found</p>
@@ -260,9 +264,11 @@ const CarSelection = () => {
               </g>
             </svg>
           </div>
-          <div className="-mt-[14px] size-8 cursor-pointer">
-            <CartIcon />
-          </div>
+          <a href="/cart">
+            <div className="-mt-[14px] size-8 cursor-pointer">
+              <CartIcon />
+            </div>
+          </a>
         </div>
       </div>
 
@@ -483,16 +489,86 @@ const ByCategories = () => {
         </div>
         <p className="text-center">Find Discounts by Quick Price Filters </p>
       </div>
-      <div className="flex gap-x-5 text-center gap-y-8 font-medium text-xl justify-center flex-wrap ">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(() => {
-          return (
-            <div>
-              <div className="size-[180px] bg-[#ffdd7d]"></div>
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          {
 
-              <p className="mt-4 text-[14px]">Led & Lightening</p>
-            </div>
-          );
-        })}
+            [
+              {
+                title: "LED & Lighting",
+                image: "https://media.istockphoto.com/id/1308248587/photo/car-headlight-with-copy-space-macro-view-closeup-of-modern-prestigious-car-3d-illustration.jpg?s=612x612&w=0&k=20&c=jpv1x0wNvQx6w99dMmrrBKrdo4Dz7u7YR1g0jwKXrQ8=",
+                link: "/category/led-lighting"
+              },
+              {
+                title: "Car Care",
+                image: "https://media.istockphoto.com/id/1347150429/photo/professional-mechanic-working-on-the-engine-of-the-car-in-the-garage.jpg?s=612x612&w=0&k=20&c=5zlDGgLNNaWsp_jq_L1AsGT85wrzpdl3kVH-75S-zTU=",
+
+                link: "/category/car-care"
+              },
+              {
+                title: "Car Mats",
+                image: "https://media.istockphoto.com/id/1023073346/photo/vehicle-floor-mats.jpg?s=612x612&w=0&k=20&c=hvZ8WFqkr_0XGKf5J5kqu6IxAE4IIEFxrS7W9awnqQc=",
+                link: "/category/car-mats"
+              },
+              {
+                title: "Car Wraps & PPF",
+                image: "https://media.istockphoto.com/id/1313133422/photo/installation-of-a-protective-paint-and-varnish-transparent-film-on-the-car-ppf-polyurethane.jpg?s=612x612&w=0&k=20&c=S_APhWj9IHpFOlBbrzOLjONyCFURu8cRn7TOr-uTxlc=",
+                link: "/category/car-wraps-ppf"
+              },
+              {
+                title: "Anti-Theft Locks",
+                image: "https://media.istockphoto.com/id/2159179684/photo/car-remote-control-and-keyless-car-concept.jpg?s=612x612&w=0&k=20&c=h54SSS7R4tspZzG5o7VvyYcHZiagpBF6qDKVnWE-4kg=",
+                link: "/category/anti-theft-locks"
+              },
+              {
+                title: "Modifications",
+                image: "https://media.istockphoto.com/id/652660336/photo/auto-mechanic-service-and-repair.jpg?s=612x612&w=0&k=20&c=aH07LO5KmZ921rTUMCdlHFRsZig0wxAekiyhKCbt-Rk=",
+                link: "/category/modifications"
+              },
+              {
+                title: "Gadgets",
+                image: "https://media.istockphoto.com/id/892770978/photo/i-dont-need-therapy-i-just-need-camping.jpg?s=612x612&w=0&k=20&c=u8VCgT3yRS7XFE169ADk6gwQXysU9P9SCr61RQE-3_o=",
+                link: "/category/gadgets"
+              },
+              {
+                title: "Alloy Rims Wheel",
+                image: "https://media.istockphoto.com/id/532670969/photo/alloy-wheel-rim.jpg?s=612x612&w=0&k=20&c=sBtxK1LEEG7g0MT9aCwsHdq1CQdoPvJTsnydYiKfplg=",
+                link: "/category/alloy-rims-wheel"
+              },
+              {
+                title: "Car Intake Air Filter with Pipe",
+                image: "https://media.istockphoto.com/id/652660336/photo/auto-mechanic-service-and-repair.jpg?s=612x612&w=0&k=20&c=aH07LO5KmZ921rTUMCdlHFRsZig0wxAekiyhKCbt-Rk=",
+                link: "/category/car-intake-air-filter"
+              },
+              {
+                title: "Performance",
+                image: "https://media.istockphoto.com/id/1158672749/photo/car-engine-inside.jpg?s=612x612&w=0&k=20&c=ByF5gKxBgKPl--mZ9vZa2FDESC07vg0Jn8qvhJ4jPXE=",
+                link: "/category/performance"
+              },
+              {
+                title: "Car Body Kits",
+                image: "https://media.istockphoto.com/id/160821689/photo/auto-parts.jpg?s=612x612&w=0&k=20&c=HszbmFYLv7hLnJde45x48aatbxUhW3ozyGThIMEALKM=",
+                link: "/category/car-body-kits"
+              },
+              {
+                title: "Car Body Kits",
+                image: "https://media.istockphoto.com/id/160821689/photo/auto-parts.jpg?s=612x612&w=0&k=20&c=HszbmFYLv7hLnJde45x48aatbxUhW3ozyGThIMEALKM=",
+                link: "/category/car-body-kits"
+              },
+
+            ].map((item, index) => (
+              <div key={index} className="flex flex-col items-center text-center">
+                <div className="size-[180px] bg-[#ffdd7d] flex items-center justify-center rounded-lg overflow-hidden cursor-pointer">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-all duration-300"
+                  />
+                </div>
+                <p className="mt-2 text-xl font-medium">{item.title}</p>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
@@ -617,7 +693,7 @@ export const FeaturedProducts = () => {
                       $23.86
                     </span>
                   </div>
-                  <div className=" flex gap-x-1 cursor-pointer font-semibold items-center">
+                  {/* <div className=" flex gap-x-1 cursor-pointer font-semibold items-center">
                     <p className="text-[#034c8c]">Add to cart</p>
                     <svg
                       className="mt-[2px]"
@@ -635,7 +711,7 @@ export const FeaturedProducts = () => {
                         d="m19 12-6-6m6 6-6 6m6-6H5"
                       />
                     </svg>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </SplideSlide>

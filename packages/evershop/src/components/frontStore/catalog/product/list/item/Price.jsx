@@ -6,7 +6,7 @@ function Price({ regular, special }) {
     <div className="product-price-listing">
       {regular.value === special.value && (
         <div>
-          <span className="sale-price font-semibold">{regular.text}</span>
+          {/* <span className="sale-price font-semibold">{regular.text}</span> */}
         </div>
       )}
       {special.value < regular.value && (

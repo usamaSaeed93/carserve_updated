@@ -4,6 +4,7 @@ import ProductList from '@components/frontStore/catalog/product/list/List';
 import { _ } from '@evershop/evershop/src/lib/locale/translate';
 
 export default function Products({ products: { items } }) {
+  console.log('items', items);
   return (
     <div>
       <ProductList products={items} countPerRow={4} />

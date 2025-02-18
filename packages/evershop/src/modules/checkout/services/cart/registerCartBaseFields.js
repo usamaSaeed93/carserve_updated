@@ -41,7 +41,7 @@ module.exports.registerCartBaseFields = function registerCartBaseFields(
       key: 'currency',
       resolvers: [
         async function resolver() {
-          const currency = getConfig('shop.currency', 'USD');
+          const currency = getConfig('shop.currency', 'PKR');
           return currency;
         }
       ]

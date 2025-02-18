@@ -10,7 +10,7 @@ exports.toPrice = function toPrice(value, forDisplay = false) {
   }
   const rounding = getConfig('pricing.rounding', 'round');
   const precision = getConfig('pricing.precision', 2);
-  const precisionFix = 10**precision;
+  const precisionFix = 10 ** precision;
   switch (rounding) {
     case 'up':
       price = Math.ceil(price * precisionFix) / precisionFix;
@@ -28,7 +28,7 @@ exports.toPrice = function toPrice(value, forDisplay = false) {
   if (!forDisplay) {
     return price;
   } else {
-    const currency = getConfig('shop.currency', 'USD');
+    const currency = getConfig('shop.currency', 'PKR');
     const language = getConfig('shop.language', 'en');
     return new Intl.NumberFormat(language, {
       style: 'currency',

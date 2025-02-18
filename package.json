@@ -54,6 +54,7 @@
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "dependencies": {
-    "@splidejs/react-splide": "^0.7.12"
+    "@splidejs/react-splide": "^0.7.12",
+    "aws-sdk": "^2.1692.0"
   }
 }

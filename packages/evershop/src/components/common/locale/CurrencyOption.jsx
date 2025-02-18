@@ -158,7 +158,7 @@ function CurrencyOptions(props) {
     { value: 'TND', text: 'Tunisian Dinar' },
     { value: 'TRY', text: 'Turkish Lira' },
     { value: 'TMM', text: 'Turkmenistani Manat' },
-    { value: 'USD', text: 'US Dollar' },
+    // { value: 'PKR', text: 'US Dollar' },
     { value: 'UGX', text: 'Ugandan Shilling' },
     { value: 'UAH', text: 'Ukrainian Hryvnia' },
     { value: 'AED', text: 'United Arab Emirates Dirham' },

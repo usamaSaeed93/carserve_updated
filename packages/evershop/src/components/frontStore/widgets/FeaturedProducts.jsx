@@ -85,15 +85,14 @@ export const FeaturedProducts = ({ collections }) => {
                                             </div>
                                         </div>
                                         <div className="flex gap-x-1.5 items-center">
-                                            <div className="text-gray-400">
+                                            {/* <div className="text-gray-400">
                                                 <span>{product.price.regular.text}</span>
-                                            </div>
+                                            </div> */}
                                             <span className="text-[#bf3617] text-3xl font-bold">
-                                                {product.price.special.text}
+                                                {product.price.regular.text}
                                             </span>
                                         </div>
-                                        <div className="flex gap-x-1 cursor-pointer font-semibold items-center">
-                                            <p className="text-[#034c8c]">Add to cart</p>
+                                        {/* <div className="flex gap-x-1 cursor-pointer font-semibold items-center">
                                             <svg
                                                 className="mt-[2px]"
                                                 width="16"
@@ -110,7 +109,7 @@ export const FeaturedProducts = ({ collections }) => {
                                                     d="m19 12-6-6m6 6-6 6m6-6H5"
                                                 />
                                             </svg>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </SplideSlide>

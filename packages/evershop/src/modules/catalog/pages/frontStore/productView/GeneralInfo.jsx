@@ -24,7 +24,7 @@ export default function GeneralInfo({ product }) {
           component: { default: Price },
           props: {
             regular: product.price.regular,
-            special: product.price.special
+            // special: product.price.special
           },
           sortOrder: 10,
           id: 'productSinglePrice'

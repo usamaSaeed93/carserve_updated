@@ -152,7 +152,7 @@ module.exports.currencies = [
   { code: 'TND', name: 'Tunisian Dinar' },
   { code: 'TRY', name: 'Turkish Lira' },
   { code: 'TMM', name: 'Turkmenistani Manat' },
-  { code: 'USD', name: 'US Dollar' },
+  { code: 'PKR', name: 'US Dollar' },
   { code: 'UGX', name: 'Ugandan Shilling' },
   { code: 'UAH', name: 'Ukrainian Hryvnia' },
   { code: 'AED', name: 'United Arab Emirates Dirham' },
